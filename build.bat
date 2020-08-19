@@ -47,20 +47,20 @@ call dx --dex --output="%PROJ%\bin\classes.dex" "%PROJ%\obj"
 IF %ERRORLEVEL% NEQ 0 GOTO EXIT
 
 REM Generate the unaligned and unsigned APK
-aapt package -f -m -F "%PROJ%\bin\hello_unaligned.apk" -M "%PROJ%\src\AndroidManifest.xml" -S "%PROJ%\res" -I "%ANDROID_JAR%"
+aapt package -f -m -F "%PROJ%\bin\unaligned.apk" -M "%PROJ%\src\AndroidManifest.xml" -S "%PROJ%\res" -I "%ANDROID_JAR%"
 IF %ERRORLEVEL% NEQ 0 GOTO EXIT
 
 REM Add the bytecode to the APK (file copy is needed to ensure the right APK structure)
 copy /Y /B "%PROJ%\bin\classes.dex" . 2>nul
-aapt add "%PROJ%\bin\hello_unaligned.apk" classes.dex
+aapt add "%PROJ%\bin\unaligned.apk" classes.dex
 del classes.dex /q >nul 2>nul
 
 REM Align the APK
-zipalign -f 4 "%PROJ%\bin\hello_unaligned.apk" "%PROJ%\bin\hello_aligned.apk"
+zipalign -f 4 "%PROJ%\bin\unaligned.apk" "%PROJ%\bin\aligned.apk"
 IF %ERRORLEVEL% NEQ 0 GOTO EXIT
 
-REM Sign the APK (pass: secret)
-call apksigner sign --ks "%PROJ%\src\demo.keystore" -v1-signing-enabled true -v2-signing-enabled true --ks-pass pass:password --out "%PROJ%\bin\hello.apk" "%PROJ%\bin\hello_aligned.apk"
+REM Sign the APK
+call apksigner sign --ks "%PROJ%\src\demo.keystore" -v1-signing-enabled true -v2-signing-enabled true --ks-pass pass:password --out "%PROJ%\bin\hello.apk" "%PROJ%\bin\aligned.apk"
 GOTO EXIT
 
 :JDKNOTFOUND
