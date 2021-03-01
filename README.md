@@ -19,7 +19,7 @@ API level is 29. You can also download AVD images to emulate an Android device.
 
 A sample keystore with a demo certificate is included. It's highly recommended
 to generate your own certificate if you plan to modify and redistribute the
-APK. The JDK keytool can be used to generate a new certificate and store in
+APK. The JDK keytool can be used to generate a new certificate and store it
 into a new keystore:
 ```
 del src\demo.keystore /q
